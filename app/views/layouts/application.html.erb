@@ -17,12 +17,136 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag "css-zero/reset", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "css-zero/variables", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "css-zero/utilities", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <%= yield %>
+  <body class="sidebar-layout">
+    <aside id="sidebar">
+      <div class="sidebar-menu">
+        <!-- App Logo/Brand -->
+        <%= link_to root_path, class: "btn sidebar-menu__button" do %>
+          <div class="flex shrink-0 overflow-hidden rounded-lg bg-primary">
+            <span class="m-2 font-bold text-white">PM1</span>
+          </div>
+          <div class="flex flex-col text-start leading-tight overflow-hidden">
+            <span class="overflow-ellipsis font-semibold">PM1 App</span>
+            <span class="overflow-ellipsis text-xs">Your Project Manager</span>
+          </div>
+        <% end %>
+        
+        <div class="sidebar-menu__content">
+          <!-- Main Navigation -->
+          <div class="sidebar-menu__group">
+            <div class="sidebar-menu__group-label">Navigation</div>
+            <div class="sidebar-menu__items">
+              <details open>
+                <summary class="btn sidebar-menu__button">
+                  <span class="overflow-ellipsis">Dashboard</span>
+                </summary>
+                <nav class="sidebar-menu__sub">
+                  <%= link_to "Home", root_path, class: "btn sidebar-menu__button", aria: { current: current_page?(root_path) ? "page" : nil } %>
+                </nav>
+              </details>
+              
+              <% if user_signed_in? %>
+                <details>
+                  <summary class="btn sidebar-menu__button">
+                    <span class="overflow-ellipsis">Projects</span>
+                  </summary>
+                  <nav class="sidebar-menu__sub">
+                    <%= link_to "All Projects", projects_path, class: "btn sidebar-menu__button", aria: { current: current_page?(projects_path) ? "page" : nil } %>
+                    <%= link_to "New Project", new_project_path, class: "btn sidebar-menu__button", aria: { current: current_page?(new_project_path) ? "page" : nil } %>
+                  </nav>
+                </details>
+                
+                <details>
+                  <summary class="btn sidebar-menu__button">
+                    <span class="overflow-ellipsis">Account</span>
+                  </summary>
+                  <nav class="sidebar-menu__sub">
+                    <%= link_to "Profile", edit_user_registration_path, class: "btn sidebar-menu__button", aria: { current: current_page?(edit_user_registration_path) ? "page" : nil } %>
+                    <%= link_to "Settings", edit_user_registration_path, class: "btn sidebar-menu__button" %>
+                  </nav>
+                </details>
+              <% end %>
+            </div>
+          </div>
+          
+          <!-- Resources Section -->
+          <div class="sidebar-menu__group">
+            <div class="sidebar-menu__group-label">Resources</div>
+            <div class="sidebar-menu__items">
+              <a class="btn sidebar-menu__button" href="#">
+                <span class="overflow-ellipsis">Documentation</span>
+              </a>
+              <a class="btn sidebar-menu__button" href="#">
+                <span class="overflow-ellipsis">Help</span>
+              </a>
+            </div>
+          </div>
+          
+          <!-- User Profile at Bottom -->
+          <% if user_signed_in? %>
+            <%= link_to edit_user_registration_path, class: "btn sidebar-menu__button mbs-auto" do %>
+              <div class="flex shrink-0 overflow-hidden rounded-lg">
+                <div class="bg-primary text-white p-2 rounded-full">
+                  <%= current_user.email.first.upcase %>
+                </div>
+              </div>
+              <div class="flex flex-col text-start leading-tight overflow-hidden">
+                <span class="overflow-ellipsis max-i-full font-semibold"><%= current_user.email.split('@').first %></span>
+                <span class="overflow-ellipsis max-i-full text-xs"><%= current_user.email %></span>
+              </div>
+            <% end %>
+          <% else %>
+            <%= link_to new_user_session_path, class: "btn sidebar-menu__button mbs-auto" do %>
+              <div class="flex flex-col text-start leading-tight overflow-hidden">
+                <span class="overflow-ellipsis max-i-full font-semibold">Sign In</span>
+                <span class="overflow-ellipsis max-i-full text-xs">to access your account</span>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </aside>
+
+    <main id="main">
+      <!-- Flash Messages -->
+      <% if notice.present? %>
+        <div popover class="flash" style="--flash-position: 5rem;" data-controller="element-removal" data-action="animationend->element-removal#remove" role="alert"><%= notice %></div>
+      <% end %>
+      
+      <% if alert.present? %>
+        <div popover class="flash flash-error" style="--flash-position: 5rem;" data-controller="element-removal" data-action="animationend->element-removal#remove" role="alert"><%= alert %></div>
+      <% end %>
+      
+      <!-- Mobile Header with Sign In/Out -->
+      <div class="flex justify-between items-center mb-4 md:hidden">
+        <h1 class="font-bold text-xl">PM1</h1>
+        <div>
+          <% if user_signed_in? %>
+            <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "btn btn-sm btn-outline" %>
+          <% else %>
+            <%= link_to "Sign In", new_user_session_path, class: "btn btn-sm" %>
+          <% end %>
+        </div>
+      </div>
+      
+      <!-- Main Content -->
+      <div class="container">
+        <%= yield %>
+      </div>
+      
+      <!-- Footer -->
+      <footer class="mt-8 py-4 border-t border-gray-200">
+        <div class="container text-center text-gray-500">
+          <p>&copy; <%= Date.today.year %> PM1 Application</p>
+        </div>
+      </footer>
+    </main>
   </body>
 </html>

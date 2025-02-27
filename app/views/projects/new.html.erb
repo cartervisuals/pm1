@@ -1,0 +1,39 @@
+<div>
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <%= link_to projects_path, class: "btn btn-sm btn-outline mb-2" do %>
+        ← Back to Projects
+      <% end %>
+      <h1 class="text-3xl font-bold">New Project</h1>
+    </div>
+  </div>
+
+  <div class="card p-6 max-w-lg mx-auto">
+    <%= form_with(model: @project, local: true) do |form| %>
+      <% if @project.errors.any? %>
+        <div class="card p-4 mb-6 bg-error-light">
+          <h2 class="text-lg font-semibold mb-2"><%= pluralize(@project.errors.count, "error") %> prohibited this project from being saved:</h2>
+          <ul class="list-disc pl-5">
+            <% @project.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="mb-4">
+        <%= form.label :name, class: "block mb-2 font-semibold" %>
+        <%= form.text_field :name, class: "w-full p-2 border rounded", placeholder: "Enter project name" %>
+      </div>
+
+      <div class="mb-6">
+        <%= form.label :description, class: "block mb-2 font-semibold" %>
+        <%= form.text_area :description, rows: 5, class: "w-full p-2 border rounded", placeholder: "Describe your project" %>
+      </div>
+
+      <div class="flex justify-end">
+        <%= form.submit "Create Project", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+</div>

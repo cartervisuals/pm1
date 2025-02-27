@@ -1,0 +1,48 @@
+<div>
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold">Dashboard</h1>
+    <% if user_signed_in? %>
+      <div class="hidden md:block">
+        <%= link_to "Edit Profile", edit_user_registration_path, class: "btn btn-sm" %>
+      </div>
+    <% end %>
+  </div>
+
+  <% if user_signed_in? %>
+    <div class="card p-6 mb-6">
+      <h2 class="text-xl font-semibold mb-4">Welcome back, <%= current_user.email.split('@').first %>!</h2>
+      <p class="mb-4">You are successfully signed in to your account.</p>
+      
+      <div class="flex gap-4 mt-6">
+        <%= link_to "View Profile", edit_user_registration_path, class: "btn" %>
+        <%= link_to "View Projects", projects_path, class: "btn btn-primary" %>
+      </div>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="card p-6">
+        <h3 class="text-lg font-semibold mb-3">Quick Actions</h3>
+        <ul class="list-disc pl-5 mb-4">
+          <li class="mb-2"><%= link_to "Create a new project", new_project_path, class: "text-link" %></li>
+          <li class="mb-2">Invite team members</li>
+          <li class="mb-2"><%= link_to "Update your profile", edit_user_registration_path, class: "text-link" %></li>
+        </ul>
+      </div>
+      
+      <div class="card p-6">
+        <h3 class="text-lg font-semibold mb-3">Recent Activity</h3>
+        <p class="text-gray-500">No recent activity to display.</p>
+      </div>
+    </div>
+  <% else %>
+    <div class="card p-6">
+      <h2 class="text-xl font-semibold mb-4">Welcome to PM1</h2>
+      <p class="mb-6">Please sign in or sign up to access the application.</p>
+      
+      <div class="flex gap-4">
+        <%= link_to "Sign In", new_user_session_path, class: "btn" %>
+        <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-primary" %>
+      </div>
+    </div>
+  <% end %>
+</div>
